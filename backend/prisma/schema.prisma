@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+model Specialite {
+  specid      Int    @id @default(autoincrement()) @db.UnsignedInt
+  designation   String  @unique @db.VarChar(50)
+  cout  Float 
+  medecin Medecin[]
+}
+model Utilisateur {
+  id         Int       @id @default(autoincrement()) @db.UnsignedInt
+  nom        String    @db.VarChar(30)
+  prenom     String    @db.VarChar(20)
+  email      String    @unique @db.VarChar(50)
+  imageart   String    @db.VarChar(255)
+  sexe       String    @db.VarChar(5)
+  created_at DateTime? @db.DateTime(0)
+  updated_at DateTime? @db.DateTime(0)
+  password   String    @db.VarChar(200)
+  role       String    @db.VarChar(50)
+  tel       String    @db.VarChar(20)
+  deleted   Boolean @default(false)
+  medecin Medecin?
+  patient Patient?
+}
+model Medecin {
+  id Int @id @default(autoincrement()) @db.UnsignedInt
+  reference String @unique @db.VarChar(20)
+  specid    Int    @db.UnsignedInt
+  userId Int @unique @db.UnsignedInt
+  utilisateur Utilisateur @relation(fields: [userId], references: [id],onDelete: Cascade,onUpdate:Cascade,map:"medecin_utilisateurid_foreign")
+  specialite Specialite @relation(fields: [specid], references: [specid],onDelete: Restrict,onUpdate: Cascade,map: "specialite_medecinid_foreign")
+  rendezvous Rendezvous[]
+    abscences   abscence[]
+
+}
+model Patient {
+  id Int @id @default(autoincrement()) @db.UnsignedInt
+  numDossier String? @db.VarChar(20)
+  userId Int @unique @db.UnsignedInt
+  utilisateur Utilisateur @relation(fields: [userId], references: [id],onUpdate: Cascade,onDelete:Cascade, map: "patient_utilisateurid_foreign")
+  rendezvous Rendezvous[]
+}
+model Rendezvous {
+  id         Int      @id @default(autoincrement()) @db.UnsignedInt
+  type       typeRendezvous 
+  dateRendez DateTime
+  etat        etatRendezvous @default(NONEFF)
+  idMed      Int      @db.UnsignedInt
+  idPat      Int      @db.UnsignedInt
+  assurance Boolean @default(false)
+  cout  Decimal @db.Decimal(10,4) 
+  @@unique([idMed, idPat, dateRendez], map: "RendezVous_idMed_idClient_dateRendez_key")
+  medecin Medecin @relation(fields: [idMed], references: [id],onUpdate:Cascade,map: "rendezvous_medecinid_foreign")
+  patient Patient @relation(fields: [idPat], references: [id],onUpdate: Cascade, map: "rendezvous_patientid_foreign")
+}
+enum etatRendezvous{
+  EFF
+  NONEFF
+  REPORTE
+}
+ enum typeRendezvous{
+  RDV
+  URG
+}
+ model InvitationCode {
+  id        Int      @id @default(autoincrement()) @db.UnsignedInt
+  code      String   @unique @db.VarChar(7) 
+  isUsed    Boolean  @default(false)        
+  createdAt DateTime @default(now())         
+  expiresAt DateTime?                        
+  usedAt    DateTime?                      
+}
+model abscence {
+  id Int  @id @default(autoincrement()) @db.UnsignedInt
+  minDate DateTime 
+  maxDate DateTime 
+  idMed Int      @db.UnsignedInt
+    medecin Medecin @relation(fields: [idMed], references: [id],onUpdate:Cascade,map: "abscence_medecinid_foreign")
+
+}
