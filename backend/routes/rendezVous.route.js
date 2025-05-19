@@ -62,6 +62,9 @@ router.get('/effectuer', async (req, res) => {
               }
             } : {}) // Sinon, on n'ajoute pas le filtre `dateRendez`
           },
+          orderBy: {
+    dateRendez: 'asc',
+  },
             include: {
                 medecin: {
                     include: {
@@ -119,6 +122,9 @@ etat: {
                 }
               } : {}) // Sinon, on n'ajoute pas le filtre `dateRendez`
             },
+            orderBy: {
+    dateRendez: 'asc',
+  },
             include: {
               medecin: {
                 include: {

@@ -127,7 +127,7 @@ const RendezVous = ({ RDVEff, RDVNonEff }) => {
                       <TableCell className="px-4 py-3 text-gray-500 text-start">{order.medecin.utilisateur.nom + ' ' + order.medecin.utilisateur.prenom}</TableCell>
                       <TableCell className="px-4 py-3 text-gray-500 text-start">{ order.dateRendez.split('T')[0] + ' ' + ' ' +order.dateRendez.split('T')[1].slice(0,5)}</TableCell>
                       <TableCell className="px-4 py-3 text-gray-500 text-start">
-                        <Badge size="sm" color={order.etat === 'EFF' ? 'success' : 'error'}>
+                        <Badge size="sm" color={order.etat === 'REPORTE' ? 'warning' : 'error'}>
                           {order.etat}
                         </Badge>  
                       </TableCell>

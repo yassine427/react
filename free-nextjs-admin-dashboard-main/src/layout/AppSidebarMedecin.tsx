@@ -42,11 +42,7 @@ const navItems: NavItem[] = [
     name: "Calendar",
     path: "calendar",
   },
-  {
-    icon: <MdEventAvailable className="text-gray-800 w-6 h-6" />,
-    name: "Rendez vous",
-    path: "rendez_vous",
-  },
+
  
   {
     icon: <UserCircleIcon />,
